@@ -7,20 +7,50 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
-  TouchableOpacity,
   ImageBackground,
   Platform,
   KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { UserContext } from '../contexts/UserContext';
+import { loginUser } from '../utils/api';
+import SignIn from '../components/SignIn';
 
 export default function Login() {
   const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const { setLoggedInUser } = useContext(UserContext);
+
+  const handleLogIn = async () => {
+    setIsLoading(false);
+    setError(null);
+    if (!username || !password) {
+      return Alert.alert('Please enter a username and password');
+    }
+    try {
+      setIsLoading(true);
+      const userDetails = await loginUser(username, password);
+      setLoggedInUser(userDetails.user);
+      // Alert.alert("Welcome to FoodLogPro!");
+    } catch (err) {
+      setError(err.response?.data?.msg);
+      setIsLoading(false);
+      Alert.alert(error);
+    }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={container} className="flex-1">
-        <StatusBar />
+        <StatusBar
+          barStyle="dark-content"
+          backgroundColor="transparent"
+          translucent
+        />
         <ImageBackground
           source={{ uri: 'https://i.ibb.co/jDQXXK6/login-bg.png' }}
           resizeMode="cover"
@@ -49,6 +79,8 @@ export default function Login() {
                 <TextInput
                   placeholder="Enter your username"
                   className="h-12 border border-gray-300 rounded-lg px-4 m-4 bg-gray-100 text-gray-800 shadow-md"
+                  value={username}
+                  onChangeText={setUsername}
                 />
               </View>
               <View>
@@ -59,13 +91,11 @@ export default function Login() {
                   placeholder="Enter you password"
                   className="h-12 border border-gray-300 rounded-lg px-4 m-4 bg-gray-100 text-gray-800 shadow-md"
                   secureTextEntry={true}
+                  value={password}
+                  onChangeText={setPassword}
                 />
               </View>
-              <TouchableOpacity className="w-1/3 m-auto my-5 py-3 rounded-md shadow-md bg-indigo-700">
-                <Text className="text-white text-center text-sm font-medium">
-                  Sign in
-                </Text>
-              </TouchableOpacity>
+              <SignIn pressHandler={handleLogIn} />
               <Text className="mt-6 text-center text-md text-white">
                 Don't have an account?{'  '}
                 <Text className="font-medium text-indigo-500">Sign up</Text>
