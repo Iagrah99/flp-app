@@ -11,8 +11,10 @@ import {
   Platform,
   KeyboardAvoidingView,
   Alert,
+  ActivityIndicator
 } from 'react-native';
 import { useState, useContext } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../contexts/UserContext';
 import { loginUser } from '../utils/api';
 import SignIn from '../components/SignIn';
@@ -21,13 +23,12 @@ export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const { setLoggedInUser } = useContext(UserContext);
+  const navigation = useNavigation();
 
   const handleLogIn = async () => {
     setIsLoading(false);
-    setError(null);
     if (!username || !password) {
       return Alert.alert('Please enter a username and password');
     }
@@ -35,11 +36,11 @@ export default function Login() {
       setIsLoading(true);
       const userDetails = await loginUser(username, password);
       setLoggedInUser(userDetails.user);
-      // Alert.alert("Welcome to FoodLogPro!");
-    } catch (err) {
-      setError(err.response?.data?.msg);
       setIsLoading(false);
-      Alert.alert(error);
+      navigation.navigate('Meals');
+    } catch (err) {
+      setIsLoading(false);
+      Alert.alert('Error', err.response?.data?.msg);
     }
   };
 
@@ -95,7 +96,7 @@ export default function Login() {
                   onChangeText={setPassword}
                 />
               </View>
-              <SignIn pressHandler={handleLogIn} />
+              <SignIn pressHandler={handleLogIn} buttonText={isLoading ? <ActivityIndicator size="small" color="#fff" /> : "Login"} />
               <Text className="mt-6 text-center text-md text-white">
                 Don't have an account?{'  '}
                 <Text className="font-medium text-indigo-500">Sign up</Text>
