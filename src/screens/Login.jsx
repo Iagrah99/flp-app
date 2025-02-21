@@ -17,7 +17,8 @@ import { useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { UserContext } from '../contexts/UserContext';
 import { loginUser } from '../utils/api';
-import SignIn from '../components/SignIn';
+import FormButton from '../components/FormButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -36,8 +37,10 @@ export default function Login() {
       setIsLoading(true);
       const userDetails = await loginUser(username, password);
       setLoggedInUser(userDetails.user);
+      await AsyncStorage.setItem('loggedInUser', JSON.stringify(userDetails.user));
+      await AsyncStorage.setItem('token', userDetails.token);
       setIsLoading(false);
-      navigation.navigate('Meals');
+      navigation.navigate('Welcome');
     } catch (err) {
       setIsLoading(false);
       Alert.alert('Error', err.response?.data?.msg);
@@ -73,6 +76,7 @@ export default function Login() {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           >
             <ScrollView>
+
               <View>
                 <Text className="pl-4 text-white text-lg font-bold">
                   Username
@@ -96,7 +100,7 @@ export default function Login() {
                   onChangeText={setPassword}
                 />
               </View>
-              <SignIn pressHandler={handleLogIn} buttonText={isLoading ? <ActivityIndicator size="small" color="#fff" /> : "Login"} />
+              <FormButton pressHandler={handleLogIn} buttonColour="bg-indigo-500" buttonText={isLoading ? <ActivityIndicator size="small" color="#fff" /> : "Login"} />
               <Text className="mt-6 text-center text-md text-white">
                 Don't have an account?{'  '}
                 <Text className="font-medium text-indigo-500">Sign up</Text>
