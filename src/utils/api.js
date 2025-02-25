@@ -4,14 +4,18 @@ const weeklyMealsApi = axios.create({
   baseURL: 'https://weekly-meals-be.fly.dev/api',
 });
 
-export const getUsers = async () => {
-  const res = await weeklyMealsApi.get('/users');
-  return res.data.users;
-};
-
 export const loginUser = async (username, password) => {
   const res = await weeklyMealsApi.post('/auth/login', {
     user: { username, password },
   });
   return res.data;
+};
+
+export const getUserMeals = async (user_id, token) => {
+  const res = await weeklyMealsApi.get(`/users/${user_id}/meals`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data.meals;
 };

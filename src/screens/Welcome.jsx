@@ -47,7 +47,7 @@ const Welcome = () => {
         <Text className="text-3xl pt-10 text-center text-white">Welcome {loggedInUser.username}</Text>
 
         <View className="flex-1 justify-center w-full">
-          <FormButton buttonColour="bg-green-500" buttonText="View Meals" pressHandler={() => Alert.alert("My Meals")} />
+          <FormButton buttonColour="bg-green-500" buttonText="View Meals" pressHandler={() => navigation.navigate("Meals")} />
           <FormButton buttonColour="bg-blue-500" buttonText="Settings" pressHandler={() => Alert.alert("My Settings")} />
         </View>
         <FormButton buttonColour="bg-red-500" buttonText="Logout" pressHandler={confirmLogout} />

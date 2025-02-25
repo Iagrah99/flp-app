@@ -4,9 +4,11 @@ import { UserProvider, UserContext } from './src/contexts/UserContext';
 import { useContext, useEffect, useState } from 'react';
 import Login from './src/screens/Login';
 import Welcome from './src/screens/Welcome';
+import Meals from './src/screens/Meals';
 import './global.css';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ActivityIndicator, View } from 'react-native';
+
 
 function AppNavigator() {
   const Stack = createNativeStackNavigator();
@@ -44,6 +46,10 @@ function AppNavigator() {
           name="Welcome"
           component={Welcome}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name='Meals'
+          component={Meals}
         />
       </Stack.Navigator>
     </NavigationContainer>
