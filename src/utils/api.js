@@ -19,3 +19,12 @@ export const getUserMeals = async (user_id, token) => {
   });
   return res.data.meals;
 };
+
+export const getMealById = async (meal_id, token) => {
+  const res = await weeklyMealsApi.get(`/meals/${meal_id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};

@@ -1,6 +1,7 @@
-import { SafeAreaView, ScrollView, StatusBar, Text, RefreshControl, Image, View, ActivityIndicator } from 'react-native';
+import { SafeAreaView, ScrollView, StatusBar, Text, RefreshControl, Image, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { getUserMeals } from '../utils/api';
 import { useState, useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format } from 'date-fns';
 import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons
@@ -8,6 +9,7 @@ import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons
 const Meals = () => {
   const [meals, setMeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigation = useNavigation();
 
   const fetchMeals = async () => {
     const userToken = await AsyncStorage.getItem('token');
@@ -37,17 +39,18 @@ const Meals = () => {
         refreshControl={<RefreshControl refreshing={isLoading} onRefresh={fetchMeals} />}
       >
         {meals.map(meal => (
-          <View
+          <TouchableOpacity
             key={meal.meal_id}
             className="bg-white shadow-md shadow-black/20 rounded-2xl p-4 mb-4 flex-row items-center"
+            onPress={() => navigation.navigate('MealById', { mealId: meal.meal_id })}
           >
             {/* Meal Image */}
-            <Image source={{ uri: meal.image }} className="w-24 h-24 rounded-xl" />
+            <Image source={{ uri: meal.image }} className="w-24 h-24 rounded-xl" cachePolicy="memory-disk" />
 
             {/* Meal Details */}
             <View className="flex-1 ml-4">
               <Text className="text-lg font-semibold text-gray-900">{meal.name}</Text>
-              <Text className="text-sm text-gray-500">{meal.source}</Text>
+              <Text className="text-sm text-gray-500">By {meal.source}</Text>
               <Text className="text-xs text-gray-400">{format(new Date(meal.last_eaten), 'EEEE, dd/MM/yyyy')}</Text>
 
               {/* Rating with Half-Star Support */}
@@ -68,7 +71,7 @@ const Meals = () => {
                 })}
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
     </SafeAreaView>

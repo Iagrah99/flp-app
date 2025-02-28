@@ -5,6 +5,7 @@ import { useContext, useEffect, useState } from 'react';
 import Login from './src/screens/Login';
 import Welcome from './src/screens/Welcome';
 import Meals from './src/screens/Meals';
+import MealById from './src/screens/MealById';
 import './global.css';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ActivityIndicator, View } from 'react-native';
@@ -50,6 +51,11 @@ function AppNavigator() {
         <Stack.Screen
           name='Meals'
           component={Meals}
+        />
+        <Stack.Screen
+          name='MealById'
+          component={MealById}
+          options={{ title: 'Meal Details' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
