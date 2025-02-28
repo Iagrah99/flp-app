@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView, StatusBar, Text, RefreshControl, Image, View, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { SafeAreaView, ScrollView, StatusBar, Text, RefreshControl, Image, View, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { getUserMeals } from '../utils/api';
 import { useState, useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native'
@@ -9,25 +9,55 @@ import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons
 const Meals = () => {
   const [meals, setMeals] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const navigation = useNavigation();
 
   const fetchMeals = async () => {
-    const userToken = await AsyncStorage.getItem('token');
-    const userId = JSON.parse(await AsyncStorage.getItem('loggedInUser')).user_id;
-    const userMeals = await getUserMeals(userId, userToken);
-    setMeals(userMeals);
-    setIsLoading(false);
+    try {
+      setIsError(false);
+      setErrorMessage(null);
+      const userToken = await AsyncStorage.getItem('token');
+      const userId = JSON.parse(await AsyncStorage.getItem('loggedInUser')).user_id;
+      const userMeals = await getUserMeals(userId, userToken);
+      setMeals(userMeals);
+      setIsLoading(false);
+    } catch (err) {
+      setIsError(true);
+      setErrorMessage(err.response?.data?.msg || "An error has occurred");
+      setIsLoading(false);
+    }
   };
+
+  const handleErrors = async () => {
+    if (isError && errorMessage === "Forbidden: Invalid token") {
+      await AsyncStorage.removeItem('loggedInUser');
+      await AsyncStorage.removeItem('token');
+      navigation.navigate('Login');
+    }
+  }
 
   useEffect(() => {
     fetchMeals();
   }, []);
+
+  useEffect(() => {
+    handleErrors();
+  }, [isError, errorMessage]);
 
   if (isLoading) {
     return (
       <SafeAreaView className="flex-1 justify-center items-center">
         <ActivityIndicator size="large" color="#6366f1" />
       </SafeAreaView>
+    );
+  }
+
+  if (isError) {
+    Alert.alert(
+      "Error", // Title
+      errorMessage, // Message
+      [{ text: "OK", onPress: () => navigation.navigate("Welcome") }] // Button
     );
   }
 
