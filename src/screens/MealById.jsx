@@ -8,11 +8,15 @@ import { FontAwesome } from '@expo/vector-icons';
 
 const MealById = () => {
   const [meal, setMeal] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(true); // Track Image Load
   const navigation = useNavigation();
-
   const route = useRoute();
   const { mealId } = route.params;
+
+  useEffect(() => {
+    fetchMeal();
+  }, []); // Run once when the component mounts
 
   const fetchMeal = async () => {
     setIsLoading(true);
@@ -20,38 +24,11 @@ const MealById = () => {
       const userToken = await AsyncStorage.getItem('token');
       const mealData = await getMealById(mealId, userToken);
       setMeal(mealData.meal);
-      console.log(mealData.meal.image);
-      setIsLoading(false);
     } catch (err) {
       console.error('Error fetching meal:', err);
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchMeal();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <SafeAreaView className="flex-1 justify-center items-center bg-gray-100">
-        <ActivityIndicator size="large" color="#6366f1" />
-      </SafeAreaView>
-    );
-  }
-
-  const handleDelete = async () => {
-    Alert.alert("Delete Meal", "Are you sure you want to delete this meal?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Delete",
-        onPress: async () => {
-          const userToken = await AsyncStorage.getItem('token');
-          await deleteMeal(mealId, userToken);
-          navigation.goBack(); // Go back to the previous screen after deletion
-        },
-        style: "destructive"
-      }
-    ]);
   };
 
   if (isLoading) {
@@ -65,8 +42,20 @@ const MealById = () => {
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
       <ScrollView className="p-4">
-        {/* Meal Image */}
-        <Image source={{ uri: meal.image }} className="w-full h-56 rounded-2xl shadow-lg" cachePolicy="memory-disk" />
+        {/* Meal Image with Loading Indicator */}
+        <View className="relative">
+          {imageLoading && (
+            <View className="absolute w-full h-56 justify-center items-center bg-gray-200">
+              <ActivityIndicator size="large" color="#6366f1" />
+            </View>
+          )}
+          <Image
+            source={{ uri: meal.image }}
+            className="w-full h-56 rounded-2xl shadow-lg"
+            onLoadEnd={() => setImageLoading(false)} // Remove spinner when image loads
+            onError={() => setImageLoading(false)} // Hide spinner if image fails to load
+          />
+        </View>
 
         {/* Meal Info */}
         <View className="p-4 bg-white rounded-2xl shadow-md mt-4">
@@ -75,7 +64,6 @@ const MealById = () => {
           <Text className="text-xs text-gray-400 mt-1">
             Last Eaten: {meal.last_eaten ? format(new Date(meal.last_eaten), 'EEEE, dd/MM/yyyy') : 'No date available'}
           </Text>
-
 
           {/* Rating */}
           <View className="flex-row mt-2">
@@ -108,7 +96,12 @@ const MealById = () => {
 
           <TouchableOpacity
             className="bg-red-500 p-3 rounded-lg flex-1 ml-2 items-center"
-            onPress={handleDelete}
+            onPress={() =>
+              Alert.alert("Delete Meal", "Are you sure?", [
+                { text: "Cancel", style: "cancel" },
+                { text: "Delete", onPress: () => console.log("Deleted"), style: "destructive" }
+              ])
+            }
           >
             <FontAwesome name="trash" size={16} color="white" />
             <Text className="text-white text-sm mt-1">Delete</Text>
