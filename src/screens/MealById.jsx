@@ -5,6 +5,7 @@ import { getMealById, deleteMeal } from '../utils/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format } from 'date-fns';
 import { FontAwesome } from '@expo/vector-icons';
+import config from '../../config';
 
 const MealById = () => {
   const [meal, setMeal] = useState({});
@@ -13,6 +14,8 @@ const MealById = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { mealId } = route.params;
+
+  const [compressedImage, setCompressedImage] = useState(null);
 
   useEffect(() => {
     fetchMeal();
@@ -30,6 +33,51 @@ const MealById = () => {
       setIsLoading(false);
     }
   };
+
+  const compressImageWithTinyPNG = async (imageUri) => {
+    // const apiKey = "nZDsMvwdFzJYQhbR0lKm6LPVQZgR759x"; // Your TinyPNG API Key
+    const apiUrl = `https://api.tinify.com/shrink`;
+
+    console.log(apiKey);
+
+    const apiKey = config.TINYPNG_API_KEY;
+    console.log("Using API Key:", apiKey);
+
+    try {
+
+      if (imageUri.includes("tinify")) {
+        console.log("Image is already compressed. Skipping compression.");
+        return;
+      }
+
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Authorization": "Basic " + btoa(`api:${apiKey}`),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ source: { url: imageUri } }),
+      });
+
+      const data = await response.json();
+
+      console.log(data);
+
+      if (data.output && data.output.url) {
+        console.log("Compressed Image URL:", data.output.url);
+        setCompressedImage(data.output.url);
+      }
+    } catch (error) {
+      console.error("Error compressing image:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (meal.image) {
+      compressImageWithTinyPNG(meal.image);
+    }
+  }, [meal.image]);
+
 
   if (isLoading) {
     return (
@@ -50,7 +98,7 @@ const MealById = () => {
             </View>
           )}
           <Image
-            source={{ uri: meal.image }}
+            source={{ uri: compressedImage || meal.image }}
             className="w-full h-56 rounded-2xl shadow-lg"
             onLoadEnd={() => setImageLoading(false)} // Remove spinner when image loads
             onError={() => setImageLoading(false)} // Hide spinner if image fails to load
