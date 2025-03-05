@@ -30,12 +30,16 @@ const Meals = () => {
   };
 
   const handleErrors = async () => {
-    if (isError && errorMessage === "Forbidden: Invalid token") {
-      await AsyncStorage.removeItem('loggedInUser');
-      await AsyncStorage.removeItem('token');
-      navigation.navigate('Login');
+    if (isError) {
+      if (errorMessage === "Forbidden: Invalid token") {
+        await AsyncStorage.removeItem('loggedInUser');
+        await AsyncStorage.removeItem('token');
+        navigation.navigate('Login');
+      } else {
+        navigation.navigate('Welcome'); // Navigate to Welcome screen for other errors
+      }
     }
-  }
+  };
 
   useEffect(() => {
     fetchMeals();
@@ -57,7 +61,7 @@ const Meals = () => {
     Alert.alert(
       "Error", // Title
       errorMessage, // Message
-      [{ text: "OK", onPress: () => navigation.navigate("Welcome") }] // Button
+      [{ text: "OK", onPress: handleErrors }] // Correctly calls handleErrors on button press
     );
   }
 

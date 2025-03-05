@@ -38,10 +38,7 @@ const MealById = () => {
     // const apiKey = "nZDsMvwdFzJYQhbR0lKm6LPVQZgR759x"; // Your TinyPNG API Key
     const apiUrl = `https://api.tinify.com/shrink`;
 
-    console.log(apiKey);
-
     const apiKey = config.TINYPNG_API_KEY;
-    console.log("Using API Key:", apiKey);
 
     try {
 
@@ -61,10 +58,7 @@ const MealById = () => {
 
       const data = await response.json();
 
-      console.log(data);
-
       if (data.output && data.output.url) {
-        console.log("Compressed Image URL:", data.output.url);
         setCompressedImage(data.output.url);
       }
     } catch (error) {
