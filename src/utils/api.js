@@ -28,3 +28,12 @@ export const getMealById = async (meal_id, token) => {
   });
   return res.data;
 };
+
+export const deleteMealById = async (meal_id, token) => {
+  const res = await weeklyMealsApi.delete(`/meals/${meal_id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return res.data;
+};

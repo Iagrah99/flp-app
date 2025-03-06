@@ -1,7 +1,7 @@
 import { SafeAreaView, View, Text, Image, ActivityIndicator, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { getMealById, deleteMeal } from '../utils/api';
+import { getMealById, deleteMealById } from '../utils/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format } from 'date-fns';
 import { FontAwesome } from '@expo/vector-icons';
@@ -72,6 +72,17 @@ const MealById = () => {
     }
   }, [meal.image]);
 
+  const handleDeleteMeal = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem('token');
+      await deleteMealById(mealId, userToken);
+      Alert.alert('Success', 'Meal deleted successfully');
+      navigation.navigate('Meals');
+    } catch (err) {
+      console.error('Error deleting meal:', err);
+    }
+  };
+
 
   if (isLoading) {
     return (
@@ -139,9 +150,9 @@ const MealById = () => {
           <TouchableOpacity
             className="bg-red-500 p-3 rounded-lg flex-1 ml-2 items-center"
             onPress={() =>
-              Alert.alert("Delete Meal", "Are you sure?", [
+              Alert.alert("Confirm Deletion", "Are you sure you want to delete this meal?", [
                 { text: "Cancel", style: "cancel" },
-                { text: "Delete", onPress: () => console.log("Deleted"), style: "destructive" }
+                { text: "Delete", onPress: handleDeleteMeal, style: "destructive" }
               ])
             }
           >
