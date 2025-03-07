@@ -37,3 +37,18 @@ export const deleteMealById = async (meal_id, token) => {
   });
   return res.data;
 };
+
+export const updateMeal = async (meal_id, updatedMeal, token) => {
+  const meal = updatedMeal;
+  console.log(meal);
+
+  const res = await weeklyMealsApi.patch(
+    `/meals/${meal_id}`,
+    { meal },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+
+  return res.data.meal;
+};

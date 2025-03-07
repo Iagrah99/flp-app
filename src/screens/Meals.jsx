@@ -1,7 +1,7 @@
 import { SafeAreaView, ScrollView, StatusBar, Text, RefreshControl, Image, View, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import { getUserMeals } from '../utils/api';
-import { useState, useEffect } from 'react';
-import { useNavigation } from '@react-navigation/native'
+import { useState, useEffect, useCallback } from 'react';
+import { useNavigation, useFocusEffect } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format } from 'date-fns';
 import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons
@@ -40,6 +40,12 @@ const Meals = () => {
       }
     }
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchMeals(); // Reload data when coming back
+    }, [])
+  );
 
   useEffect(() => {
     fetchMeals();

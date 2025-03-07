@@ -6,6 +6,7 @@ import Login from './src/screens/Login';
 import Welcome from './src/screens/Welcome';
 import Meals from './src/screens/Meals';
 import MealById from './src/screens/MealById';
+import EditMeal from './src/screens/EditMeal';
 import './global.css';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ActivityIndicator, View } from 'react-native';
@@ -56,6 +57,12 @@ function AppNavigator() {
           name='MealById'
           component={MealById}
           options={{ title: 'Meal Details' }}
+        />
+
+        <Stack.Screen
+          name='EditMeal'
+          component={EditMeal}
+          options={{ title: 'Update Meal' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

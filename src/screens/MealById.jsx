@@ -1,6 +1,6 @@
 import { SafeAreaView, View, Text, Image, ActivityIndicator, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { useState, useEffect } from 'react';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useState, useEffect, useCallback } from 'react';
+import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { getMealById, deleteMealById } from '../utils/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { format } from 'date-fns';
@@ -20,6 +20,12 @@ const MealById = () => {
   useEffect(() => {
     fetchMeal();
   }, []); // Run once when the component mounts
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchMeal(); // Reload data when coming back
+    }, [])
+  );
 
   const fetchMeal = async () => {
     setIsLoading(true);
@@ -141,7 +147,7 @@ const MealById = () => {
         <View className="flex-row justify-between mt-4">
           <TouchableOpacity
             className="bg-blue-500 p-3 rounded-lg flex-1 mr-2 items-center"
-            onPress={() => navigation.navigate('EditMeal', { mealId })}
+            onPress={() => navigation.navigate('EditMeal', { meal })}
           >
             <FontAwesome name="pencil" size={16} color="white" />
             <Text className="text-white text-sm mt-1">Edit</Text>
