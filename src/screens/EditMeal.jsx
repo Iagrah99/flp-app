@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SafeAreaView, Text, TextInput, ScrollView, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { SafeAreaView, Text, TextInput, ScrollView, TouchableOpacity, View, ActivityIndicator, KeyboardAvoidingView, Platform, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -137,53 +137,57 @@ const EditMeal = () => {
 
   return (
     <SafeAreaView className="flex-1 p-5 bg-white">
-      <ScrollView className='m-3'>
-        <Text className="text-base font-medium mb-2">Name</Text>
-        <TextInput
-          className="h-12 border border-gray-300 rounded-lg px-3 pb-3 mb-4 text-lg"
-          value={name}
-          onChangeText={setName}
-          placeholder="Meal Name"
-        />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+          <ScrollView className='m-3'>
+            <Text className="text-base font-medium mb-2">Name</Text>
+            <TextInput
+              className="h-12 border border-gray-300 rounded-lg px-3 pb-3 mb-4 text-lg"
+              value={name}
+              onChangeText={setName}
+              placeholder="Meal Name"
+            />
 
-        <Text className="text-base font-medium mb-2">Upload Image</Text>
-        <TouchableOpacity className="border border-gray-300 rounded-lg p-3 mb-4 bg-gray-100" onPress={handleChooseImage}>
-          <Text className="text-gray-500">
-            {image ? image.split("/").pop() : "Choose File"}
-          </Text>
-        </TouchableOpacity>
+            <Text className="text-base font-medium mb-2">Upload Image</Text>
+            <TouchableOpacity className="border border-gray-300 rounded-lg p-3 mb-4 bg-gray-100" onPress={handleChooseImage}>
+              <Text className="text-gray-500">
+                {image ? image.split("/").pop() : "Choose File"}
+              </Text>
+            </TouchableOpacity>
 
-        <Text className="text-base font-medium mb-2">Source</Text>
-        <TextInput
-          className="h-12 border border-gray-300 rounded-lg px-3 pb-3 mb-4 text-lg"
-          value={source}
-          onChangeText={setSource}
-          placeholder="Source"
-        />
+            <Text className="text-base font-medium mb-2">Source</Text>
+            <TextInput
+              className="h-12 border border-gray-300 rounded-lg px-3 pb-3 mb-4 text-lg"
+              value={source}
+              onChangeText={setSource}
+              placeholder="Source"
+            />
 
-        <Text className="text-base font-medium mb-2">Rating</Text>
-        <TextInput
-          className="h-12 border border-gray-300 rounded-lg px-3 pb-3 mb-4 text-lg"
-          value={rating}
-          onChangeText={setRating}
-          keyboardType="numeric"
-          placeholder="Rating (1-5)"
-        />
+            <Text className="text-base font-medium mb-2">Rating</Text>
+            <TextInput
+              className="h-12 border border-gray-300 rounded-lg px-3 pb-3 mb-4 text-lg"
+              value={rating}
+              onChangeText={setRating}
+              keyboardType="numeric"
+              placeholder="Rating (1-5)"
+            />
 
-        <Text className="text-base font-medium mb-2">Last Eaten</Text>
-        <View className='right-2'>
-          <DateTimePicker
-            value={lastEaten}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-          />
-        </View>
+            <Text className="text-base font-medium mb-2">Last Eaten</Text>
+            <View className='right-2'>
+              <DateTimePicker
+                value={lastEaten}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+              />
+            </View>
 
-        <TouchableOpacity className="bg-blue-500 rounded-lg p-3 mt-5" onPress={handleUpdateMeal}>
-          <Text className="text-white text-center text-lg font-semibold">Save Changes</Text>
-        </TouchableOpacity>
-      </ScrollView>
+            <TouchableOpacity className="bg-blue-500 rounded-lg p-3 mt-5" onPress={handleUpdateMeal}>
+              <Text className="text-white text-center text-lg font-semibold">Save Changes</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 };
