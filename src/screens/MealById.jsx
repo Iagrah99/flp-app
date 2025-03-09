@@ -13,7 +13,9 @@ const MealById = () => {
   const [imageLoading, setImageLoading] = useState(true); // Track Image Load
   const navigation = useNavigation();
   const route = useRoute();
-  const { mealId } = route.params;
+  const { mealId: paramMealId, updatedMeal } = route.params || {};
+  const mealId = paramMealId || meal?.meal_id; // Ensure mealId is always defined
+
 
   const [compressedImage, setCompressedImage] = useState(null);
 
@@ -23,9 +25,21 @@ const MealById = () => {
 
   useFocusEffect(
     useCallback(() => {
-      fetchMeal(); // Reload data when coming back
-    }, [])
+      if (route.params?.updatedMeal) {
+        console.log("Updating meal with new data...");
+        setMeal(route.params.updatedMeal); // Update text fields instantly
+
+        // Force the image to reload by appending a query param to the URL
+        setMeal((prevMeal) => ({
+          ...prevMeal,
+          image: `${route.params.updatedMeal.image}?timestamp=${new Date().getTime()}`
+        }));
+      } else {
+        fetchMeal(); // Fetch from API if no updatedMeal is available
+      }
+    }, [route.params?.updatedMeal])
   );
+
 
   const fetchMeal = async () => {
     setIsLoading(true);
@@ -83,10 +97,6 @@ const MealById = () => {
       const userToken = await AsyncStorage.getItem('token');
       await deleteMealById(mealId, userToken);
       Alert.alert('Success', 'Meal deleted successfully');
-      // navigation.reset({
-      //   index: 1, // Keep "Welcome" first, "Meals" second
-      //   routes: [{ name: 'Welcome' }, { name: 'Meals' }],
-      // });
       navigation.goBack();
     } catch (err) {
       console.error('Error deleting meal:', err);

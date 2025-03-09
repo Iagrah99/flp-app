@@ -70,9 +70,9 @@ const EditMeal = () => {
       });
 
       const data = await response.json();
-      setImageUploading(false);
 
       if (data.success) {
+        setImageUploading(false);
         return data.data.url; // Return the uploaded image URL
       } else {
         console.log("ImgBB Error:", data);
@@ -87,37 +87,36 @@ const EditMeal = () => {
 
   const handleUpdateMeal = async () => {
     try {
-      console.log("Uploading image...");
-
       const imgUrl = !image.includes("ibb.co") ? await handleImageUpload(image) : null;
-      console.log("Uploaded Image URL:", imgUrl);
 
       // Construct the updated meal object
       const updatedMeal = {
+        ...meal,
         name,
-        image: imgUrl || meal.image, // Ensure we use the latest image URL if available
+        image: imgUrl || meal.image,
         source,
         rating: Number(rating),
         last_eaten: lastEaten.toISOString(),
       };
 
-      console.log("Updated Meal:", updatedMeal);
-
       // Get the user token
-      const userToken = await AsyncStorage.getItem('token');
+      const userToken = await AsyncStorage.getItem("token");
       if (!userToken) {
         console.error("No user token found!");
         return;
       }
 
-      // Call the API to update the meal and **wait** for it to complete
+      // Call the API to update the meal and wait for it to complete
       const updatedMealData = await updateMeal(meal.meal_id, updatedMeal, userToken);
-
-      console.log("Updated Meal Data:", updatedMealData);
 
       if (updatedMealData) {
         console.log("Meal successfully updated!");
-        navigation.goBack(); // Go back only after a successful update
+
+        // Pass the updated meal to the previous screen
+        navigation.setParams({ updatedMeal });
+
+        // Go back without creating a new screen
+        navigation.goBack();
       } else {
         console.error("Meal update failed.");
       }
@@ -125,6 +124,7 @@ const EditMeal = () => {
       console.error("Error updating meal:", error);
     }
   };
+
 
 
   if (imageUploading) {
