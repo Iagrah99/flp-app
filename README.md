@@ -6,8 +6,8 @@ This project requires an API key for TinyPNG and IMGBB. Store your API key secur
 
 ```javascript
 const config = {
-  TINYPNG_API_KEY: 'nZDsMvwdFzJYQhbR0lKm6LPVQZgR759x',
-  IMGBB_API_KEY: 'd55dfa829f2cadf9024177a9f9b0a450',
+  TINYPNG_API_KEY: 'your_api_key',
+  IMGBB_API_KEY: 'your_api_key',
 };
 
 export default config;
