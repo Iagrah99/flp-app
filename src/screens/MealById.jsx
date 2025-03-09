@@ -83,7 +83,11 @@ const MealById = () => {
       const userToken = await AsyncStorage.getItem('token');
       await deleteMealById(mealId, userToken);
       Alert.alert('Success', 'Meal deleted successfully');
-      navigation.navigate('Meals');
+      // navigation.reset({
+      //   index: 1, // Keep "Welcome" first, "Meals" second
+      //   routes: [{ name: 'Welcome' }, { name: 'Meals' }],
+      // });
+      navigation.goBack();
     } catch (err) {
       console.error('Error deleting meal:', err);
     }
