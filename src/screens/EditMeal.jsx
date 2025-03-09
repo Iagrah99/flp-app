@@ -164,13 +164,24 @@ const EditMeal = () => {
             />
 
             <Text className="text-base font-medium mb-2">Rating</Text>
-            <TextInput
-              className="h-12 border border-gray-300 rounded-lg px-3 pb-3 mb-4 text-lg"
-              value={rating}
-              onChangeText={setRating}
-              keyboardType="numeric"
-              placeholder="Rating (1-5)"
-            />
+            <View className="flex-row items-center mb-4">
+              <TouchableOpacity
+                className="bg-gray-300 px-3 py-2 rounded"
+                onPress={() => setRating((prev) => Math.max(1, Math.round((prev - 0.5) * 2) / 2))}
+              >
+                <Text>-</Text>
+              </TouchableOpacity>
+
+              <Text className="mx-4 text-lg">{rating}</Text>
+
+              <TouchableOpacity
+                className="bg-gray-300 px-3 py-2 rounded"
+                onPress={() => setRating((prev) => Math.min(5, Math.round((prev + 0.5) * 2) / 2))}
+              >
+                <Text>+</Text>
+              </TouchableOpacity>
+            </View>
+
 
             <Text className="text-base font-medium mb-2">Last Eaten</Text>
             <View className='right-2'>
