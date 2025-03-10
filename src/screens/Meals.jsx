@@ -114,6 +114,14 @@ const Meals = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      {/* Floating Plus Button */}
+      <TouchableOpacity
+        className="absolute bottom-6 right-6 bg-blue-500 w-16 h-16 rounded-full shadow-lg flex items-center justify-center"
+        onPress={() => navigation.navigate('AddMeal')} // Navigate to AddMeal screen
+        activeOpacity={0.8}
+      >
+        <FontAwesome name="plus" size={28} color="white" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

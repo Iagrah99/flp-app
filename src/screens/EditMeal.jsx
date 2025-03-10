@@ -16,7 +16,7 @@ const EditMeal = () => {
   const [image, setImage] = useState(meal.image);
   const [name, setName] = useState(meal.name);
   const [source, setSource] = useState(meal.source);
-  const [rating, setRating] = useState(String(meal.rating));
+  const [rating, setRating] = useState(Number(meal.rating));
   const [lastEaten, setLastEaten] = useState(new Date(meal.last_eaten));
   const [imageUploading, setImageUploading] = useState(false);
 
@@ -164,19 +164,17 @@ const EditMeal = () => {
             />
 
             <Text className="text-base font-medium mb-2">Rating</Text>
-            <View className="flex-row items-center mb-4">
+            <View className="flex-row items-center">
               <TouchableOpacity
                 className="bg-gray-300 px-3 py-2 rounded"
-                onPress={() => setRating((prev) => Math.max(1, Math.round((prev - 0.5) * 2) / 2))}
+                onPress={() => setRating((prev) => Math.max(1, prev - 0.5))}
               >
                 <Text>-</Text>
               </TouchableOpacity>
-
               <Text className="mx-4 text-lg">{rating}</Text>
-
               <TouchableOpacity
                 className="bg-gray-300 px-3 py-2 rounded"
-                onPress={() => setRating((prev) => Math.min(5, Math.round((prev + 0.5) * 2) / 2))}
+                onPress={() => setRating((prev) => Math.min(5, prev + 0.5))}
               >
                 <Text>+</Text>
               </TouchableOpacity>

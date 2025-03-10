@@ -52,3 +52,13 @@ export const updateMeal = async (meal_id, updatedMeal, token) => {
 
   return res.data.meal;
 };
+
+export const addMeal = async (meal, token) => {
+  console.log(meal);
+  const res = await weeklyMealsApi.post(
+    '/meals',
+    meal, // Send meal data in the body
+    { headers: { Authorization: `Bearer ${token}` } } // Correct place for headers
+  );
+  return res.data.meal;
+};
