@@ -70,15 +70,15 @@ const AddMeal = () => {
 
       if (data.success) {
         setImageUrl(data.data.url);
+        setIsImageUploading(false);
       } else {
         console.error('Image upload failed:', data);
         setImageUrl('');
       }
     } catch (error) {
       console.error('Error uploading image:', error);
-      setImageUrl('');
-    } finally {
       setIsImageUploading(false);
+      setImageUrl('');
     }
   };
 

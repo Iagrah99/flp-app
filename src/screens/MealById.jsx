@@ -54,43 +54,43 @@ const MealById = () => {
     }
   };
 
-  const compressImageWithTinyPNG = async (imageUri) => {
-    // const apiKey = "nZDsMvwdFzJYQhbR0lKm6LPVQZgR759x"; // Your TinyPNG API Key
-    const apiUrl = `https://api.tinify.com/shrink`;
+  // const compressImageWithTinyPNG = async (imageUri) => {
+  //   // const apiKey = "nZDsMvwdFzJYQhbR0lKm6LPVQZgR759x"; // Your TinyPNG API Key
+  //   const apiUrl = `https://api.tinify.com/shrink`;
 
-    const apiKey = config.TINYPNG_API_KEY;
+  //   const apiKey = config.TINYPNG_API_KEY;
 
-    try {
+  //   try {
 
-      if (imageUri.includes("tinify")) {
-        console.log("Image is already compressed. Skipping compression.");
-        return;
-      }
+  //     if (imageUri.includes("tinify")) {
+  //       console.log("Image is already compressed. Skipping compression.");
+  //       return;
+  //     }
 
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Authorization": "Basic " + btoa(`api:${apiKey}`),
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ source: { url: imageUri } }),
-      });
+  //     const response = await fetch(apiUrl, {
+  //       method: "POST",
+  //       headers: {
+  //         "Authorization": "Basic " + btoa(`api:${apiKey}`),
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ source: { url: imageUri } }),
+  //     });
 
-      const data = await response.json();
+  //     const data = await response.json();
 
-      if (data.output && data.output.url) {
-        setCompressedImage(data.output.url);
-      }
-    } catch (error) {
-      console.error("Error compressing image:", error);
-    }
-  };
+  //     if (data.output && data.output.url) {
+  //       setCompressedImage(data.output.url);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error compressing image:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (meal.image) {
-      compressImageWithTinyPNG(meal.image);
-    }
-  }, [meal.image]);
+  // useEffect(() => {
+  //   if (meal.image) {
+  //     compressImageWithTinyPNG(meal.image);
+  //   }
+  // }, [meal.image]);
 
   const handleDeleteMeal = async () => {
     try {
@@ -102,7 +102,6 @@ const MealById = () => {
       console.error('Error deleting meal:', err);
     }
   };
-
 
   if (isLoading) {
     return (

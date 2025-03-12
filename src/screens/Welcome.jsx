@@ -48,7 +48,7 @@ const Welcome = () => {
 
         <View className="flex-1 justify-center w-full">
           <FormButton buttonColour="bg-green-500" buttonText="View Meals" pressHandler={() => navigation.navigate("Meals")} />
-          <FormButton buttonColour="bg-blue-500" buttonText="Settings" pressHandler={() => Alert.alert("My Settings")} />
+          {/* <FormButton buttonColour="bg-blue-500" buttonText="Settings" pressHandler={() => Alert.alert("My Settings")} /> */}
         </View>
         <FormButton buttonColour="bg-red-500" buttonText="Logout" pressHandler={confirmLogout} />
       </ImageBackground>
