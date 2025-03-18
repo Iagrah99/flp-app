@@ -1,4 +1,5 @@
-import { SafeAreaView, View, Text, Image, ActivityIndicator, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { SafeAreaView, View, Text, ActivityIndicator, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { Image } from 'expo-image'
 import { useState, useEffect, useCallback } from 'react';
 import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { getMealById, deleteMealById } from '../utils/api';
@@ -15,9 +16,6 @@ const MealById = () => {
   const route = useRoute();
   const { mealId: paramMealId, updatedMeal } = route.params || {};
   const mealId = paramMealId || meal?.meal_id; // Ensure mealId is always defined
-
-
-  const [compressedImage, setCompressedImage] = useState(null);
 
   useEffect(() => {
     fetchMeal();
@@ -54,44 +52,6 @@ const MealById = () => {
     }
   };
 
-  // const compressImageWithTinyPNG = async (imageUri) => {
-  //   // const apiKey = "nZDsMvwdFzJYQhbR0lKm6LPVQZgR759x"; // Your TinyPNG API Key
-  //   const apiUrl = `https://api.tinify.com/shrink`;
-
-  //   const apiKey = config.TINYPNG_API_KEY;
-
-  //   try {
-
-  //     if (imageUri.includes("tinify")) {
-  //       console.log("Image is already compressed. Skipping compression.");
-  //       return;
-  //     }
-
-  //     const response = await fetch(apiUrl, {
-  //       method: "POST",
-  //       headers: {
-  //         "Authorization": "Basic " + btoa(`api:${apiKey}`),
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ source: { url: imageUri } }),
-  //     });
-
-  //     const data = await response.json();
-
-  //     if (data.output && data.output.url) {
-  //       setCompressedImage(data.output.url);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error compressing image:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (meal.image) {
-  //     compressImageWithTinyPNG(meal.image);
-  //   }
-  // }, [meal.image]);
-
   const handleDeleteMeal = async () => {
     try {
       const userToken = await AsyncStorage.getItem('token');
@@ -122,10 +82,10 @@ const MealById = () => {
             </View>
           )}
           <Image
-            source={{ uri: compressedImage || meal.image }}
-            className="w-full h-56 rounded-2xl shadow-lg"
-            onLoadEnd={() => setImageLoading(false)} // Remove spinner when image loads
-            onError={() => setImageLoading(false)} // Hide spinner if image fails to load
+            source={{ uri: meal.image }}
+            style={{ width: "100%", height: 224, borderRadius: 16, shadowColor: "#000", shadowOpacity: 0.3, shadowRadius: 4 }}
+            contentFit="cover"
+            cachePolicy="memory"
           />
         </View>
 

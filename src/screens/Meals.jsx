@@ -1,4 +1,5 @@
-import { SafeAreaView, ScrollView, StatusBar, Text, RefreshControl, Image, View, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView, ScrollView, StatusBar, Text, RefreshControl, View, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import { Image } from 'expo-image'
 import { getUserMeals } from '../utils/api';
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native'
@@ -85,7 +86,17 @@ const Meals = () => {
             onPress={() => navigation.navigate('MealById', { mealId: meal.meal_id })}
           >
             {/* Meal Image */}
-            <Image source={{ uri: meal.image }} className="w-24 h-24 rounded-xl" cachePolicy="memory-disk" />
+            <Image
+              source={{ uri: meal.image }}
+              style={{
+                width: 96, // Equivalent to Tailwind's w-24
+                height: 96, // Equivalent to Tailwind's h-24
+                borderRadius: 12, // Equivalent to Tailwind's rounded-xl
+              }}
+              contentFit="cover"
+              cachePolicy="memory"
+            />
+
 
             {/* Meal Details */}
             <View className="flex-1 ml-4">
