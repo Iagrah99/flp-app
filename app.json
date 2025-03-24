@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "flp-app",
+    "name": "foodlogpro",
     "slug": "flp-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,13 +13,20 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ig7799.flpapp",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/app-load-image.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -32,6 +39,11 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "aa920cde-19c7-4341-9b8e-36a6c215ab25"
+      }
+    }
   }
 }
